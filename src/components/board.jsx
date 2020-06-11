@@ -64,9 +64,95 @@ class Board extends Component {
         {        
             return change;   
         }
-        else return [];
-        
+        else return [];   
     }
+    checkDown(squareID , zz){
+        let squares = this.state.squares;
+        let change = [];
+        let y = 0;
+            
+        squareID+=8;
+        while(squareID<64)
+        {
+            if(squares[squareID].value === zz)
+            {
+                change.push(squareID);
+            }
+            else
+            {
+                if(squares[squareID].value !== 0)
+                {
+                    y=1;
+                }
+                break;
+            }
+            squareID+=8;
+        }
+        if(y === 1)
+        {        
+            return change;   
+        }
+        else return [];
+    }
+
+    checkRight(squareID , zz){
+        let squares = this.state.squares;
+        let change = [];
+        let y = 0;
+            
+        squareID+=1;
+        while(squareID%8 !== 0)
+        {
+            if(squares[squareID].value === zz)
+            {
+                change.push(squareID);
+            }
+            else
+            {
+                if(squares[squareID].value !== 0)
+                {
+                    y=1;
+                }
+                break;
+            }
+            squareID+=1;
+        }
+        if(y === 1)
+        {        
+            return change;   
+        }
+        else return [];
+    }
+
+    checkLeft(squareID , zz){
+        let squares = this.state.squares;
+        let change = [];
+        let y = 0;
+            
+        squareID-=1;
+        while(squareID%8 !== 7)
+        {
+            if(squares[squareID].value === zz)
+            {
+                change.push(squareID);
+            }
+            else
+            {
+                if(squares[squareID].value !== 0)
+                {
+                    y=1;
+                }
+                break;
+            }
+            squareID-=1;
+        }
+        if(y === 1)
+        {        
+            return change;   
+        }
+        else return [];
+    }
+    
 
     handleOnClick  = (squareID) => {
         let z=0;
@@ -98,16 +184,48 @@ class Board extends Component {
             {
                 squares[upChanges[i]].value = (squares[upChanges[i]].value === 1)?2:1;
             }
+            let downChanges = this.checkDown(squareID,(squares[squareID].value === 1)?2:1);
+            for(let i=0;i<downChanges.length;i++)
+            {
+                squares[downChanges[i]].value = (squares[downChanges[i]].value === 1)?2:1;
+            }
+            let rightChanges = this.checkRight(squareID,(squares[squareID].value === 1)?2:1);
+            for(let i=0;i<rightChanges.length;i++)
+            {
+                squares[rightChanges[i]].value = (squares[rightChanges[i]].value === 1)?2:1;
+            }
+            let leftChanges = this.checkLeft(squareID,(squares[squareID].value === 1)?2:1);
+            for(let i=0;i<leftChanges.length;i++)
+            {
+                squares[leftChanges[i]].value = (squares[leftChanges[i]].value === 1)?2:1;
+            }
+            
+            
             if(this.state.turn%2 === 1)
             {
                  playerWhiteScore+=upChanges.length;
                  playerBlackScore-=upChanges.length;
+                 playerWhiteScore+=downChanges.length;
+                 playerBlackScore-=downChanges.length;
+                 playerWhiteScore+=rightChanges.length;
+                 playerBlackScore-=rightChanges.length;
+                 playerWhiteScore+=leftChanges.length;
+                 playerBlackScore-=leftChanges.length;
+                
             }
             else 
             {
                 playerWhiteScore-=upChanges.length;
                 playerBlackScore+=upChanges.length;
+                playerWhiteScore-=downChanges.length;
+                playerBlackScore+=downChanges.length;
+                playerWhiteScore-=rightChanges.length;
+                playerBlackScore+=rightChanges.length;
+                playerWhiteScore-=leftChanges.length;
+                playerBlackScore+=leftChanges.length;
+                
             }
+
         }
         
         this.setState({squares , turn:this.state.turn+z , playerBlackScore,playerWhiteScore});
