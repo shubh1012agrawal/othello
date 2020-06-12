@@ -101,7 +101,7 @@ class Board extends Component {
         let y = 0;
             
         squareID+=1;
-        while(squareID%8 !== 0)
+        while(squareID<64 && squareID%8 !== 0)
         {
             if(squares[squareID].value === zz)
             {
@@ -130,7 +130,7 @@ class Board extends Component {
         let y = 0;
             
         squareID-=1;
-        while(squareID%8 !== 7)
+        while(squareID>=0 && squareID%8 !== 7)
         {
             if(squares[squareID].value === zz)
             {
@@ -145,6 +145,126 @@ class Board extends Component {
                 break;
             }
             squareID-=1;
+        }
+        if(y === 1)
+        {        
+            return change;   
+        }
+        else return [];
+    }
+    
+    checkLeftUp(squareID , zz)
+    {
+        let squares = this.state.squares;
+        let change = [];
+        let y = 0;
+            
+        squareID-=9;
+        while(squareID>=0    && squareID%8 !== 7)
+        {
+            if(squares[squareID].value === zz)
+            {
+                change.push(squareID);
+            }
+            else
+            {
+                if(squares[squareID].value !== 0)
+                {
+                    y=1;
+                }
+                break;
+            }
+            squareID-=9;
+        }
+        if(y === 1)
+        {        
+            return change;   
+        }
+        else return [];
+    }
+    
+    checkRightUp(squareID , zz)
+    {
+        let squares = this.state.squares;
+        let change = [];
+        let y = 0;
+            
+        squareID-=7;
+        while(squareID>=0    && squareID%8 !== 0)
+        {
+            if(squares[squareID].value === zz)
+            {
+                change.push(squareID);
+            }
+            else
+            {
+                if(squares[squareID].value !== 0)
+                {
+                    y=1;
+                }
+                break;
+            }
+            squareID-=7;
+        }
+        if(y === 1)
+        {        
+            return change;   
+        }
+        else return [];
+    }
+
+    checkRightDown(squareID , zz)
+    {
+        let squares = this.state.squares;
+        let change = [];
+        let y = 0;
+            
+        squareID+=9;
+        while(squareID<64    && squareID%8 !== 0)
+        {
+            if(squares[squareID].value === zz)
+            {
+                change.push(squareID);
+            }
+            else
+            {
+                if(squares[squareID].value !== 0)
+                {
+                    y=1;
+                }
+                break;
+            }
+            squareID+=9;
+        }
+        if(y === 1)
+        {        
+            return change;   
+        }
+        else return [];
+    }
+
+    checkLeftDown(squareID , zz)
+    {
+        let squares = this.state.squares;
+        let change = [];
+        let y = 0;
+            
+        squareID+=7;
+        while(squareID<64    && squareID%8 !== 7)
+        {
+            if(squares[squareID].value === zz)
+            {
+                change.push(squareID);
+            }
+            else
+            {
+                if(squares[squareID].value !== 0)
+                {
+                    y=1;
+                }
+                break;
+            }
+            squareID+=7;
         }
         if(y === 1)
         {        
@@ -199,8 +319,27 @@ class Board extends Component {
             {
                 squares[leftChanges[i]].value = (squares[leftChanges[i]].value === 1)?2:1;
             }
+            let leftUpChanges = this.checkLeftUp(squareID,(squares[squareID].value === 1)?2:1);
+            for(let i=0;i<leftUpChanges.length;i++)
+            {
+                squares[leftUpChanges[i]].value = (squares[leftUpChanges[i]].value === 1)?2:1;
+            }
+            let rightUpChanges = this.checkRightUp(squareID,(squares[squareID].value === 1)?2:1);
             
-            
+            for(let i=0;i<rightUpChanges.length;i++)
+            {
+                squares[rightUpChanges[i]].value = (squares[rightUpChanges[i]].value === 1)?2:1;
+            }
+            let leftDownChanges = this.checkLeftDown(squareID,(squares[squareID].value === 1)?2:1);
+            for(let i=0;i<leftDownChanges.length;i++)
+            {
+                squares[leftDownChanges[i]].value = (squares[leftDownChanges[i]].value === 1)?2:1;
+            }
+            let rightDownChanges = this.checkRightDown(squareID,(squares[squareID].value === 1)?2:1);
+            for(let i=0;i<rightDownChanges.length;i++)
+            {
+                squares[rightDownChanges[i]].value = (squares[rightDownChanges[i]].value === 1)?2:1;
+            }
             if(this.state.turn%2 === 1)
             {
                  playerWhiteScore+=upChanges.length;
@@ -211,7 +350,16 @@ class Board extends Component {
                  playerBlackScore-=rightChanges.length;
                  playerWhiteScore+=leftChanges.length;
                  playerBlackScore-=leftChanges.length;
-                
+                 
+                 playerWhiteScore+=rightUpChanges.length;
+                 playerBlackScore-=rightUpChanges.length;
+                 playerWhiteScore+=rightDownChanges.length;
+                 playerBlackScore-=rightDownChanges.length;
+                 playerWhiteScore+=leftUpChanges.length;
+                 playerBlackScore-=leftUpChanges.length;
+                 playerWhiteScore+=leftDownChanges.length;
+                 playerBlackScore-=leftDownChanges.length;
+                    
             }
             else 
             {
@@ -224,6 +372,15 @@ class Board extends Component {
                 playerWhiteScore-=leftChanges.length;
                 playerBlackScore+=leftChanges.length;
                 
+                playerWhiteScore-=rightUpChanges.length;
+                 playerBlackScore+=rightUpChanges.length;
+                 playerWhiteScore-=rightDownChanges.length;
+                 playerBlackScore+=rightDownChanges.length;
+                 playerWhiteScore-=leftUpChanges.length;
+                 playerBlackScore+=leftUpChanges.length;
+                 playerWhiteScore-=leftDownChanges.length;
+                 playerBlackScore+=leftDownChanges.length;
+                 
             }
 
         }
